@@ -1,32 +1,38 @@
 const express = require("express")
+const axios = require("axios")
+require("dotenv").config()
+const { YOUR_API_KEY } = process.env
 const router = express.Router()
 const { Diet } = require("../db")
 
 let getDiets = async () => {
     try {
+        let diet = await axios.get(
+            `https://api.spoonacular.com/recipes/complexSearch?apiKey=${YOUR_API_KEY}&addRecipeInformation=true&number=100`
+        );
+        let types = await diet.data.results.map((e) => e.diets);
+        let otro = types.flat();
+
+
         let diets = [
-            "vegan",
-            "gluten free",
-            "whole 30",
-            "lacto ovo vegetarian",
-            "paleolithic",
-            "primal",
-            "foodmap friendly",
-            "pescatarian",
-            "dairy free",
-            "ketogenic"
+            ...new Set(otro),
+            "vegetarian",
+            "lacto vegetarian",
+            "ovo vegetarian",
+            "ovo lacto vegetarian"
         ];
 
-        diets.forEach((el) => {
-            Diet.findOrCreate({
+
+        diets.forEach(async (el) => {
+            await Diet.findOrCreate({
                 where: { name : el},
             });
         });
         let allDiets = await Diet.findAll();
         return allDiets
     } catch (error) {
-        console.log(err);
-        throw Error(err);
+        console.log(error);
+        throw Error(error);
     }
 }
 

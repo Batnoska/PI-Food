@@ -11,7 +11,7 @@ const getApiFullData = async() => {
         return response.data.results.map((e) => {
             return {
                 id: e.id,
-                name: e.name,
+                name: e.title.toLowerCase(),
                 summary: e.summary,
                 healthScore: e.healthScore,
                 image: e.image,
@@ -67,7 +67,7 @@ router.get("/", async(req, res) => {
         let recipes = await getAllRecipes();
         if(!name) return res.status(200).json(recipes);
         let auxRecipes = recipes.filter((e) => e.name.toUpperCase().includes((name.toUpperCase())));
-        auxRecipes.length? res.json(auxRecipes): res.status(404).json({ msg: `not found recipes with ${name}`})
+        auxRecipes.length? res.send(auxRecipes): res.status(404).send("No recipes with the query name")
     } catch (error) {
         res.status(404).json({error})
     }
@@ -144,7 +144,7 @@ router.delete("/:id", async(req, res) => {
     try {
         let {id} = req.params;
         if(!id) return res.status(400).json({ msg: "Id is required"})
-        await Recipe.destryo({
+        await Recipe.destroy({
             where:{
                 id: id
             }
