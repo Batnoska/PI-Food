@@ -1,26 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import style from "./NavBar.module.css";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom"
+import Seachbar from "../Searchbar/Search"
+import style from "./Navbar.module.css"
 
-export default function NavBar() {
+export default function Navbar() {
+    const [show, setShow] = React.useState("")
+    useEffect(() => {}, [show])
     return (
-        <header>
-            <nav className={style.nav}>
-                <div>
-                    <Link to={"/"}>
-                        <button className={style.btn}>
-                            Back to Start
-                        </button>
-                    </Link>
-                </div>
-                <div>
-                    <Link to={"/create"}>
-                        <button className={style.btn2}>
-                            Create your own recipe!
-                        </button>
-                    </Link>
-                </div>
-            </nav>
+        <header className={style.container}>
+            <p className={style.logo}>FoodBook PI</p>
+            <Seachbar setShow = {setShow} />
+            <Link to="/recipes"><button className={style.create}>Create Recipe!</button></Link>
         </header>
-    );
+    )
 }

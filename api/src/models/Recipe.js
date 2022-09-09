@@ -19,13 +19,27 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     healthScore: {
-      type: DataTypes.FLOAT
+      type: DataTypes.FLOAT,
+      defaultValue:0,
+      validate: {
+        min:0,
+        max:100,
+        isNumber(value) {
+          if(isNaN(value)) throw new Error("healthScore debe ser un numero")
+        }
+      }
     },
     image: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      defaultValue:"https://mejorconsalud.as.com/wp-content/uploads/2018/07/trucos-cocina.jpg"
     },
     steps: {
       type: DataTypes.TEXT
+    },
+    createdInDb: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     }
   });
 };

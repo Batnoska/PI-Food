@@ -1,135 +1,106 @@
-import {
-    CLEAN_DIETS,
-    CLEAN_RECIPE,
-    FILTER_A_Z,
-    FILTER_BY_NAME,
-    FILTER_DIET,
-    FILTER_SCORE,
-    GET_DETAIL,
-    GET_DIETS,
-    GET_RECIPE,
-    POST_RECIPE,
-    CLEAN_DETAIL,
-} from "./actions";
-
 const initialState = {
     recipes: [],
     allRecipes: [],
     diets: [],
-    details: [],
-};
+    detail: [],
+    filtered: [],
+    notFound:"",
+    errorServer:""
+}
 
-export default function rootReducer(state = initialState, action) {
+function rootReducer(state = initialState, action) {
     switch (action.type) {
-        case GET_RECIPE:
+        //me traigo las recetas del backend
+        case "GET_RECIPES":
+            return action.payload.error ? ({ ...state, errorServer: action.payload.error, recipes:[]}) : ({...state, recipes: action.payload, allRecipes: action.payload, notFound:"", errorServer:""});
+        
+        case "FILTER_RECIPES":
+            const listedRecipes = state.allRecipes
+            const recipesApi = listedRecipes.filter(recipe => !recipe.createdInDB)
+            const recipesDB= listedRecipes.filter(recipe => recipe.createdInDB)
+            const filteredDB = recipesDB.filter(recipe => recipe.diets.includes(action.payload))
+            const alternativeFilter = recipesApi.filter(recipe => recipe[action.payload] || recipe.diets.includes(action.payload))
+            if (action.payload === "gluten free") {
+                const gluten = recipesApi.filter(recipe => recipe["glutenFree"])
+                gluten.length && alternativeFilter.concat(gluten)
+            }
+            if (action.payload === "dairy free") {
+                const dairy = recipesApi.filter(recipe => recipe["dairyFree"])
+                dairy.length && alternativeFilter.concat(dairy)
+            }
+            const filtered = action.payload === "default" ? listedRecipes : alternativeFilter.concat(filteredDB)
+            console.log(action.payload)
             return {
                 ...state,
-                recipes: action.payload,
-                allRecipes: action.payload
+                filtered: (action.payload === "default") ? listedRecipes : filtered,
+                recipes: (action.payload === "default") ? listedRecipes : filtered,
+                notFound: (filtered.length===0) ? "Recipes not found" : ""
             };
-        case CLEAN_RECIPE:
-            return {
-                ...state,
-                recipes: action.payload,
-            };
-        case GET_DIETS:
-            return {
-                ...state,
-                diets: action.payload,
-            };
-        case CLEAN_DIETS:
-            return {
-                ...state,
-                diets: action.payload,
-            };
-        case CLEAN_DETAIL:
-            return {
-                ...state,
-                details: action.payload,
-            };
-        case FILTER_DIET:
-            let copyD = [...state.allRecipes];
-            let tipoDieta =
-                action.payload = "all"
-                    ? copyD
-                    : copyD.filter((e) => 
-                            e.diets.some((e) => e.name === action.payload)
-                    );
-            if (tipoDieta.length <= 0) {
-                tipoDieta = copyD;
-                alert("There are no recipe of the indicated type");
+
+        case "SEARCH_BY_NAME":
+            return action.payload.error ? ({...state, recipes: [], notFound:action.payload.error}) : ({...state, recipes:action.payload, notFound:""})
+        
+        case "SORT_RECIPES":
+            const sorted = state.filtered.length ? state.filtered : state.allRecipes
+            if (action.payload === "asc") (sorted.sort((a, b) => a.name.localeCompare(b.name)))
+            if(action.payload === "desc") (sorted.sort((a,b) => b.name.localeCompare(a.name)))
+            if(action.payload === "ascH") {
+                sorted.sort(function(a, b) {
+                    if(a.healthScore > b.healthScore) {return 1}
+                    if(b.healthScore > a.healthScore) { return -1}
+                    return 0
+                })
+            }
+            if (action.payload === "descH") {
+                sorted.sort(function(a, b) {
+                    if(a.healthScore > b.healthScore) { return -1 }
+                    if(b.healthScore > a.healthScore) { return 1 }
+                    return 0
+                })
             }
             return {
                 ...state,
-                recipes: tipoDieta,
-            };
-        case FILTER_A_Z:
-            let copyAZ = [...state.allRecipes];
-            let filterAZ =
-                action.payload === "A-Z"
-                    ? copyAZ.sort((a, b) => {
-                        if (a.name > b.name) {
-                            return 1;
-                        }
-                        if (b.name > a.name) {
-                            return -1;
-                        }
-                        return 0
-                    })
-                    : copyAZ.sort((a, b) => {
-                        if (a.name > b.name) {
-                            return -1;
-                        }
-                        if (b.name > a.name) {
-                            return 1
-                        }
-                        return 0;
-                    });
-                return {
-                    ...state,
-                    recipes: action.payload === "all" ? state.allRecipes : filterAZ,
-                };
-        case FILTER_SCORE:
-            let copyS = [...state.allRecipes];
-            let filterScore =
-                action.payload === "min"
-                    ? copyS.sort((a, b) => {
-                        if (a.healthScore > b.healthScore) {
-                            return 1;
-                        }
-                        if (b.healthScore > a.healthScore) {
-                            return -1;
-                        }
-                        return 0;
-                    })
-                    : copyS.sort((a, b) => {
-                        if (a.healthScore > b.healthScore) {
-                            return -1;
-                        }
-                        if (b.healthScore > a.healthScore) {
-                            return 1;
-                        }
-                        return 0;
-                    });
+                recipes: sorted
+            }
+
+        case "POST_RECIPE":
+            return {
+                ...state
+            }
+
+        case "GET_DIETS":
+            return action.payload.error ? ({...state, errorServer: action.payload.error}) : ({...state, diets: action.payload, errorServer:""})
+
+        case "GET_DETAIL":
+            return (action.payload.error) ? ({...state, notFound: action.payload}) : ({...state, detail: action.payload, notFound: ""})
+
+        case "RESET_DETAIL":
             return {
                 ...state,
-                recipes: action.payload === "all" ? state.allRecipes : filterScore,
-            };
-        case FILTER_BY_NAME:
+                detail: [""],
+                notFound: ""
+            }
+
+        case "RESET_RECIPES":
             return {
                 ...state,
-                recipes: action.payload,
-            };
-        case GET_DETAIL:
+                filtered:[],
+                recipes: []
+            }
+
+        case "FILTER_ORIGIN":
+            const filtradasPrevias = state.filtered.length ? state.filtered : state.allRecipes
+            const filtradasDB = filtradasPrevias.filter(recipe => recipe.createdInDB)
+            if(action.payload === "db" && filtradasDB.length) {return ({...state, recipes: filtradasDB, notFound: ""})}
+            if(action.payload === "db" && !filtradasDB.length) {return ({...state, recipes:[], notFound: "No recipes found"})}
             return {
                 ...state,
-                details: action.payload,
-            };
-        case POST_RECIPE:
-            return {
-                ...state,
-            };
+                recipes: state.allRecipes
+            }
+
         default:
-            return { ...state };
+            return state
     }
 }
+
+export default rootReducer;

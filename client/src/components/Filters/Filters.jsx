@@ -1,79 +1,69 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-    FilterAZ,
-    FilterMaxScore,
-    FilterTypeDiet,
-    getDiets
-} from "../../redux/actions";
-import Search from "../Search/Search";
+import React, { useState } from "react";
+import { filterOrigin, filterRecipes, getRecipes, resetRecipes, sortRecipes } from "../../redux/actions";
 import style from "./Filters.module.css";
+import { useDispatch } from "react-redux"
 
-export default function Filters({ setCurrentPage, setOrder }) {
-    const dispatch = useDispatch();
-    const dieta = useSelector((state) => state.dieta);
-
-    useEffect(() => {
-        dispatch(getDiets());
-    }, [dispatch]);
-
-    function handleAZ(e) {
-        e.preventDefault();
-        dispatch(FilterAZ(e.target.value));
-        setCurrentPage(1);
-        setOrder(e.target.value);
+export default function Filters({ setCurrentPage, setOrder, diets, setIsActive }) {
+    const dispatch = useDispatch()
+    const [filter, setFilter] = useState("")
+    const [sort, setSort] = useState("")
+    const [filterO, setFilterO] = useState("")
+    function handleFilterDiet(e) {
+        e.preventDefault()
+        dispatch(filterRecipes(e.target.value))
+        setCurrentPage(1)
+        setIsActive(1)
+        setFilter(e.target.value)
     }
 
-    function handleScore(e) {
-        e.preventDefault();
-        dispatch(FilterMaxScore(e.target.value));
-        setCurrentPage(1);
-        setOrder(e.target.value);
+    function handleSort(e) {
+        e.preventDefault()
+        dispatch(sortRecipes(e.target.value))
+        setCurrentPage(1)
+        setIsActive(1)
+        setOrder("Order" + e.target.value)
+        setSort(e.target.value)
     }
 
-    function handleTypeDiet(e) {
-        e.preventDefault();
-        dispatch(FilterTypeDiet(e.target.value));
-        setCurrentPage(1);
+    function handleFilterOrigin(e) {
+        e.preventDefault()
+        setFilter(e.target.value)
+        dispatch(filterOrigin(e.target.value))
+        setCurrentPage(1)
+        setIsActive(1)
+    }
+
+    function handleClick(e) {
+        e.preventDefault()
+        dispatch(resetRecipes())
+        dispatch(getRecipes())
+        setIsActive(1)
+        setOrder("")
+        setSort("")
+        setFilter("")
+        setFilterO("")
     }
 
     return (
-        <div className={style.flex}>
-            <div>
-                <Search />
-            </div>
-            <div>
-                <label className={style.type}>Type of Diet</label>
-                <select
-                    onChange={(e) => handleTypeDiet(e)}
-                    className={style.input}
-                >
-                    <option value="all">ALL</option>
-                    {dieta?.map((e, k) => {
-                        return (
-                            <option key={k} value={e.name}>
-                                {e.name}
-                            </option>
-                        );
-                    })}
-                </select>
-            </div>
-            <div>
-                <label className={style.type}>Order</label>
-                <select onChange={(e) => handleAZ(e)}>
-                    <option value="all">ALL</option>
-                    <option value="A-Z">A-Z</option>
-                    <option value="Z-A">Z-A</option>
-                </select>
-            </div>
-            <div>
-                <label className={style.type}>Health Score</label>
-                <select onChange={(e) => handleScore(e)}>
-                    <option value="all">ALL</option>
-                    <option value="max">Max</option>
-                    <option value="min">Min</option>
-                </select>
-            </div>
+        <div className={style.container}>
+            <button onClick={e => handleClick(e)} className={style.button}>Clear Filters</button>
+            <select name="" id="" value={sort} className={style.filter} onChange={e => handleSort(e)}>
+                <option hidden> Sort Recipes</option>
+                <option value="asc">Ascendant A-Z</option>
+                <option value="desc">Descendant Z-A</option>
+                <option value="ascH">Ascendant by Health Score</option>
+                <option value="descH">Descendant by Health Score</option>
+            </select>
+            <select name="" id="" className={style.filter} value={filter} onChange={e=> handleFilterDiet(e)}>
+                <option hidden> Filter by Diet </option>
+                <option value="default">All</option>
+                {diets.length > 0 && diets.map((diet) => {return <option key = {diet.id} value={diet.name}>{diet.name}</option>})}
+            </select>
+            <select value={filterO} onChange={e=> handleFilterOrigin(e)} className={style.filter}>
+                <option hidden> Filter By Origin</option>
+                <option value= "default">All</option>
+                <option value="db">Created</option>
+            </select>
         </div>
-    );
+    )
 }

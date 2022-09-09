@@ -1,10 +1,13 @@
 import React from "react";
 import style from "./Loading.module.css";
+import gif from "../../images/loading.gif"
 
 export default function Loading() {
     return (
-        <div>
-            <div className={style.loader}></div>
+        <div className={style.container}>
+            <div className={style.loader}>
+                <img src={gif} alt="" />
+            </div>
         </div>
-    );
+    )
 }

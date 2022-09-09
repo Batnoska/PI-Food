@@ -1,22 +1,31 @@
-import './App.css';
-import LandingPage from './components/LandingPage/LandingPage';
-import { Switch, Route } from "react-router-dom";
+import "./App.css";
+import Landing from "./components/LandingPage/Landing";
+import { BrowserRouter, Route } from "react-router-dom";
 import Home from "./components/Home/Home";
-import Detail from "./components/CardDetail/Detail";
-import Creation from "./components/Form/Form";
-import React from 'react';
+import CreateRecipe from "./components/CreateRecipe/CreateRecipe";
+import RecipeDetail from "./components/RecipeDetail/RecipeDetail";
+
 
 function App() {
   return (
-    <div className="App">
-      <Switch>
-        <Route exact path={"/"} component={LandingPage} />
-        <Route exact path={"/home"} component={Home} />
-        <Route exact path={"/details/:id"} component={Detail} />
-        <Route exact path={"/create"} component={Creation} />
-      </Switch>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Route exact path="/">
+          <Landing />
+        </Route>
+        <Route path="/home">
+          <Home />
+        </Route>
+        <Route exact path="/create">
+          <CreateRecipe />
+        </Route>
+        <Route exact path="/recipes/:id">
+          <RecipeDetail />
+        </Route>
+      </div>
+    </BrowserRouter>
   );
 }
+
 
 export default App;
