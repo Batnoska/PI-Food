@@ -16,8 +16,8 @@ function rootReducer(state = initialState, action) {
         
         case "FILTER_RECIPES":
             const listedRecipes = state.allRecipes
-            const recipesApi = listedRecipes.filter(recipe => !recipe.createdInDB)
-            const recipesDB= listedRecipes.filter(recipe => recipe.createdInDB)
+            const recipesApi = listedRecipes.filter(recipe => !recipe.createdInDb)
+            const recipesDB= listedRecipes.filter(recipe => recipe.createdInDb)
             const filteredDB = recipesDB.filter(recipe => recipe.diets.includes(action.payload))
             const alternativeFilter = recipesApi.filter(recipe => recipe[action.payload] || recipe.diets.includes(action.payload))
             if (action.payload === "gluten free") {
@@ -90,7 +90,7 @@ function rootReducer(state = initialState, action) {
 
         case "FILTER_ORIGIN":
             const filtradasPrevias = state.filtered.length ? state.filtered : state.allRecipes
-            const filtradasDB = filtradasPrevias.filter(recipe => recipe.createdInDB)
+            const filtradasDB = filtradasPrevias.filter(recipe => recipe.createdInDb)
             if(action.payload === "db" && filtradasDB.length) {return ({...state, recipes: filtradasDB, notFound: ""})}
             if(action.payload === "db" && !filtradasDB.length) {return ({...state, recipes:[], notFound: "No recipes found"})}
             return {

@@ -1,0 +1,49 @@
+.container{
+    width: fit-content;
+    max-width: 90%;
+    background-color: rgb(199, 193, 193);
+    padding: 10px 20px;
+    border-radius: 50px;
+    margin:0 auto;
+}
+
+.list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0 auto;
+    gap: 10px;
+}
+
+.itemList{
+    list-style-type: none;
+    width: 45px;
+    height: 45px;
+    padding: 10px;
+    color:rgb(66, 64, 64);
+    cursor: pointer;
+    text-align: center;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+}
+
+.itemList:hover{
+    background-color: rgb(255, 255, 255);
+    color: rgb(66, 64, 64);
+}
+
+.active{
+    background-color: rgba(19, 18, 18, 0.774);
+    list-style-type: none;
+    width: 45px;
+    height: 45px;
+    padding: 10px;
+    color:rgb(250, 250, 250);
+    cursor: pointer;
+    text-align: center;
+    border-radius: 50px;
+    font-weight: bold;
+}
+

@@ -1,0 +1,123 @@
+.detailContainer{
+    width: 100%;
+    min-height: 100vh;
+    max-height: fit-content;
+    background-image: url('../../images/fondo2.jpg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.detailBox{
+    width:fit-content;
+    min-width: 60%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 25px;
+    background-color: rgba(252, 252, 252, 0.801);
+    margin: 15px auto;
+}
+.detailHeader{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}
+.detailHeader_title{
+    text-transform: capitalize;
+    color: rgba(46, 46, 46, 0.911);
+}
+.detailHealth{
+    align-self: flex-start;
+    color: rgba(46, 46, 46, 0.911);
+    font-weight: bold;
+    margin: 0 0 5px 0;
+}
+.detailMiddle{
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: fit-content;
+    height: fit-content;
+}
+.detailSummary{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0 1rem;
+    height: 100%;
+    text-align: left;
+}
+.detailSteps{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 1rem;
+    height: 100%;
+    text-align: left;
+}
+.detailButton{
+    padding: 10px;
+    border: transparent;
+    background: #fff;
+    border-radius: 5px;
+    color:rgb(94, 91, 91);
+    font-weight: bolder;
+    cursor:pointer;
+    transition: all 0.2s ease-in-out;
+}
+.detailButton:hover{
+    background: rgba(94, 91, 91, 0.651);
+    color: #fff;
+}
+.detailImg{
+    min-height: 300px;
+    width: 300px;
+}
+.detailImg img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.detailDiets{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-left: 20px;
+    text-align: left;
+    
+}
+
+/* media queries */
+@media screen and (max-width: 768px){
+    .detailBox{
+        width:90%;
+        gap: 10px;
+        padding: 25px 10px;
+        margin: 15px auto;
+    }
+    .detailHeader_title{
+        font-size: 25px;
+        word-wrap: break-word;
+    }
+    .detailMiddle{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    .detailImg{
+        min-height: 150px;
+        width: 100%;
+    }
+    
+}

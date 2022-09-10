@@ -1,0 +1,27 @@
+.container{
+    width: 70%;
+    max-width: 500px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.603);
+}
+
+.input{
+    border: transparent;
+    padding: 10px;
+    background: transparent;
+    width: 70%;
+}
+
+.button{
+    padding: 10px;
+    border-color: transparent;
+    background-color: transparent;
+    color: rgb(15, 15, 15);
+    transition: all 0.3s ease-in-out;
+}
+
+.button:hover{
+    font-weight: bold;
+    color:rgb(255, 254, 254);
+    cursor: pointer;
+}

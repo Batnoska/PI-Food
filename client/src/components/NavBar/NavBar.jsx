@@ -10,7 +10,7 @@ export default function Navbar() {
         <header className={style.container}>
             <p className={style.logo}>FoodBook PI</p>
             <Seachbar setShow = {setShow} />
-            <Link to="/recipes"><button className={style.create}>Create Recipe!</button></Link>
+            <Link to="/create"><button className={style.create}>Create Recipe!</button></Link>
         </header>
     )
 }

@@ -89,7 +89,7 @@ export default function CreateRecipe() {
                 diets: []
             })
             alert("Recipe created successfully")
-            history.push("/push")
+            history.push("/home")
         }
     }
 
